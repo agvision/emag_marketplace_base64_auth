@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+	<id><![CDATA[AGV]]></id>
+	<version><![CDATA[1.0]]></version>
+	<vqmver required="true"><![CDATA[2.4.0]]></vqmver>
+	<author><![CDATA[AGVision Software SRL-D (https://www.agvision.ro)]]></author>
+	<file name="admin/model/module/emagmarketplace.php" error="skip">
+		<operation error="skip" info="Add base64 auth">
+			<search position="before" index="1"><![CDATA['username' => $this->emagmp_vendorusername,]]></search>
+			<add><![CDATA[//]]></add>
+		</operation>
+		<operation error="skip" info="Add base64 auth">
+			<search position="before" index="1"><![CDATA['hash' => $hash,]]></search>
+			<add><![CDATA[//]]></add>
+		</operation>
+		<operation error="skip" info="Add base64 auth">
+			<search position="before" index="1"><![CDATA[
+			$ch = curl_init();
+			]]></search>
+			<add><![CDATA[
+			//new base64 auth
+			$hash = base64_encode($this->emagmp_vendorusername . ':' . $this->emagmp_vendorpassword);
+			$headers = array(
+				'Authorization: Basic ' . $hash
+			);
+			]]></add>
+		</operation>
+		<operation error="skip" info="Add base64 auth">
+			<search position="after" index="1"><![CDATA[
+			curl_setopt($ch, CURLOPT_HEADER, false);
+			]]></search>
+			<add><![CDATA[
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+			]]></add>
+		</operation>
+	</file>
+</modification>
